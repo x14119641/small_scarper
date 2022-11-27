@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from db import ConnectorDb as cdb
 
 
 
@@ -9,7 +10,7 @@ class Scarper():
 
     def __init__(self, tickers=True) -> None:
         if tickers:
-            self.tickers = pd.read_csv('tickers.csv')['Symbol']
+            self.tickers = pd.read_csv('tickers.csv')
 
 
     def get_data(self, tick):
@@ -23,21 +24,21 @@ class Scarper():
 
     def parse_data(self, data):
         return {
-            "SharesOutstandingPCT":data['data']['ownershipSummary']['SharesOutstandingPCT']['value'],
+            "SharesOutstandingPCT":data['data']['ownershipSummary']['SharesOutstandingPCT']['value'].replace('%', ''),
             "ShareoutstandingTotal":data['data']['ownershipSummary']['ShareoutstandingTotal']['value'],
-            "TotalHoldingsValue":data['data']['ownershipSummary']['TotalHoldingsValue']['value'],
+            "TotalHoldingsValue":data['data']['ownershipSummary']['TotalHoldingsValue']['value'].replace('$', ''),
             "IncreasedPositionsHolders":data['data']['activePositions']['rows'][0]['holders'],
-            "IncreasedPositionsShares":data['data']['activePositions']['rows'][0]['shares'],
+            "IncreasedPositionsShares":data['data']['activePositions']['rows'][0]['shares'].replace(',', ''),
             "DecreasedPositionsHolders":data['data']['activePositions']['rows'][1]['holders'],
-            "DecreasedPositionsShares":data['data']['activePositions']['rows'][1]['shares'],
+            "DecreasedPositionsShares":data['data']['activePositions']['rows'][1]['shares'].replace(',', ''),
             "HeldPositionsHolders":data['data']['activePositions']['rows'][2]['holders'],
-            "HeldPositionsShares":data['data']['activePositions']['rows'][2]['shares'],
+            "HeldPositionsShares":data['data']['activePositions']['rows'][2]['shares'].replace(',', ''),
             "TotalInstitutionalHolders":data['data']['activePositions']['rows'][3]['holders'],
-            "TotalInstitutionalShares":data['data']['activePositions']['rows'][3]['shares'],
+            "TotalInstitutionalShares":data['data']['activePositions']['rows'][3]['shares'].replace(',', ''),
             "NewPositionsHolders":data['data']['newSoldOutPositions']['rows'][0]['holders'],
-            "NewPositionsShares":data['data']['newSoldOutPositions']['rows'][0]['shares'],
+            "NewPositionsShares":data['data']['newSoldOutPositions']['rows'][0]['shares'].replace(',', ''),
             "SoldOutPositionsHolders":data['data']['newSoldOutPositions']['rows'][1]['holders'],
-            "SoldOutPositionsShares":data['data']['newSoldOutPositions']['rows'][1]['shares'],
+            "SoldOutPositionsShares":data['data']['newSoldOutPositions']['rows'][1]['shares'].replace(',', ''),
         }
 
 
@@ -52,9 +53,15 @@ class Scarper():
                 self.errors_dicts_list.append({
                     'tick':tick, 'position':i, 'error':str(e)
                 })
-        pd.DataFrame(self.errors_dicts_list).to_csv()
+        
+    
+
+    # def __del__(self):
+    #     pd.DataFrame(self.errors_dicts_list).to_csv('errors.csv')
 
 
 if __name__ == '__main__':
-    sc = Scarper()
+    cls = cdb()
+    sc = Scarper(cls)
+    cls.show_dbs()
     sc.main()
