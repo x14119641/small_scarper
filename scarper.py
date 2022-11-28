@@ -19,7 +19,8 @@ class Scarper():
             "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36",
             "Content-Type":"application/json"}
 
-        return requests.get(URL,headers=HEADERS).json()
+        data=  requests.get(URL,headers=HEADERS).json()
+        return data
 
 
     def parse_data(self, data):
@@ -50,6 +51,7 @@ class Scarper():
                 data = self.parse_data(self.get_data(tick))
                 print(data)
             except Exception as e:
+                
                 self.errors_dicts_list.append({
                     'tick':tick, 'position':i, 'error':str(e)
                 })
