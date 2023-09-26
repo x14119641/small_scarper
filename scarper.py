@@ -56,6 +56,7 @@ class Scarper():
                 data = self.parse_data(self.get_data(self.tickers.iloc[i].Symbol))
                 print('data:', data)
             except Exception as e:
+                
                 self.errors_dicts_list.append({
                     'tick':self.tickers.iloc[i], 'position':i, 'error':str(e)
                 })

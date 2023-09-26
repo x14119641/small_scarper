@@ -3,6 +3,7 @@ from scarper import Scarper as sc
 from datetime import datetime
 import pandas as pd
 import os
+import time
 
 errors_dicts_list = []
 
@@ -72,11 +73,20 @@ def insert_investors_data(refresh_date=None):
     bulk_data = []
     i=0
     cls.tickers.fillna('', inplace=True)
+<<<<<<< HEAD
     for tick in cls.tickers['Symbol'][0:1]:
         i += 1
         print(i)
         try:    
             data = cls.parse_data(cls.get_data(tick))
+=======
+    for tick in cls.tickers['Symbol'][0:-1]:
+        i += 1
+        try:  
+            raw_data =   cls.get_data(tick)
+            data = cls.parse_data(raw_data)
+
+>>>>>>> 4a1cbc660a3ace1707294d0c726bc155beb56ee7
             bulk_data.append((
                 tick, data['SharesOutstandingPCT'],
                 data['ShareoutstandingTotal'],data['TotalHoldingsValue'],
@@ -88,8 +98,8 @@ def insert_investors_data(refresh_date=None):
                 data['SoldOutPositionsHolders'],data['SoldOutPositionsShares'],
                 refresh_date or ''
                 ))
-            if i % 99 ==0:
-                print(i+1)
+            if i % 100 ==0:
+                print(i)
             if i % 999 ==0:
                     conn.execute_query(
                         """INSERT INTO institutional_holdings (
@@ -102,10 +112,13 @@ def insert_investors_data(refresh_date=None):
                             new_positions_holders,new_positions_shares,
                             sold_out_positions_holders,sold_out_positions_shares,
                             refreshed_page_date) 
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                             bulk_data)
+                    print('batch inserted in instutitions')
                     bulk_data = []
-            if i ==len(cls.tickers['Symbol'])-1:
+            
+            if i ==len(cls.tickers['Symbol'][0:-1])-1:
+
                 conn.execute_query(
                     """INSERT INTO institutional_holdings(
                         tick, institutional_ownership_perc, 
@@ -119,17 +132,18 @@ def insert_investors_data(refresh_date=None):
                         refreshed_page_date) 
                         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                         bulk_data)
-            
+                print('last batch inserted in instutitions')
+
         except Exception as e:
-            # print('e: ',str(e))
-            
             errors_dicts_list.append({
                 'tick':tick, 'position':i, 'error':str(e)
             })
-    print('data inserted in instutitions')
-    pd.DataFrame(
-        errors_dicts_list).to_csv(
-            'errors_runner.csv', mode='a', header=not os.path.exists('errors_runner.csv'))
+    
+    if errors_dicts_list:
+        pd.DataFrame(
+            errors_dicts_list).to_csv(
+                'errors_runner.csv', 
+                mode='a', header=not os.path.exists('errors_runner.csv'))
 
     
 
