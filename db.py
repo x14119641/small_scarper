@@ -121,9 +121,9 @@ class ConnectorDb():
 
 if __name__=="__main__":
     cls = ConnectorDb()
-    print(cls.get_query("SELECT COUNT(*) FROM tickers"))
-    print(cls.get_query("SELECT COUNT(*) FROM institutional_holdings"))
-    print(cls.get_query("SELECT * FROM institutional_holdings LIMIT 1"))
+    # print(cls.get_query("SELECT COUNT(*) FROM tickers"))
+    # print(cls.get_query("SELECT COUNT(*) FROM institutional_holdings"))
+    # print(cls.get_query("SELECT * FROM institutional_holdings LIMIT 1"))
     # cls.execute_query("DELETE FROM institutional_holdings")
     # cls.test_main()
     # cls.delete_db()

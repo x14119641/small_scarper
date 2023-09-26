@@ -72,8 +72,9 @@ def insert_investors_data(refresh_date=None):
     bulk_data = []
     i=0
     cls.tickers.fillna('', inplace=True)
-    for tick in cls.tickers['Symbol'][:]:
+    for tick in cls.tickers['Symbol'][0:1]:
         i += 1
+        print(i)
         try:    
             data = cls.parse_data(cls.get_data(tick))
             bulk_data.append((

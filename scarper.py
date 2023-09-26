@@ -8,9 +8,14 @@ from db import ConnectorDb as cdb
 class Scarper():
     errors_dicts_list = []
 
-    def __init__(self, tickers=True) -> None:
-        if tickers:
+    def __init__(self, tickers=True, nasdaq=True) -> None:
+        if tickers and not nasdaq:
             self.tickers = pd.read_csv('tickers.csv')
+        elif tickers and nasdaq:
+            print('HERE')
+            self.tickers = pd.read_csv('nasdaq_screener.csv')
+            print(self.tickers)
+            print(len(self.tickers))
 
 
     def get_data(self, tick):
@@ -19,8 +24,8 @@ class Scarper():
             "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36",
             "Content-Type":"application/json"}
 
-        return requests.get(URL,headers=HEADERS).json()
-
+        data = requests.get(URL,headers=HEADERS).json()
+        return data
 
     def parse_data(self, data):
         return {
@@ -44,15 +49,17 @@ class Scarper():
 
     def main(self):
         print(len(self.tickers))
-        for i,tick in enumerate(self.tickers[0:1]):
+        for i in range(1,len(self.tickers[0:2])):
+            print(i)
             try:    
-                print(tick)
-                data = self.parse_data(self.get_data(tick))
-                print(data)
+                print('tick: ', self.tickers.iloc[i].Symbol)
+                data = self.parse_data(self.get_data(self.tickers.iloc[i].Symbol))
+                print('data:', data)
             except Exception as e:
                 self.errors_dicts_list.append({
-                    'tick':tick, 'position':i, 'error':str(e)
+                    'tick':self.tickers.iloc[i], 'position':i, 'error':str(e)
                 })
+        print('finito')
         
     
 
