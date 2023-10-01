@@ -123,6 +123,7 @@ if __name__=="__main__":
     cls = ConnectorDb()
     print(cls.get_query("SELECT COUNT(*) FROM tickers"))
     print(cls.get_query("SELECT COUNT(*) FROM institutional_holdings"))
+    print(cls.get_query("SELECT * FROM tickers WHERE tick = 'SHOT'"))
     # print(cls.get_query("SELECT * FROM institutional_holdings"))
     # cls.execute_query("DELETE FROM institutional_holdings")
     # cls.test_main()

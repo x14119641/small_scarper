@@ -26,10 +26,10 @@ def insert_ticks():
         bulk_data.append((row['Symbol'], row["Name"]))
         if i % 999 ==0:
             conn.execute_query(
-                "INSERT INTO tickers(tick, name) VALUES (?,?)",bulk_data)
+                "INSERT OR IGNORE   INTO tickers(tick, name) VALUES (?,?)",bulk_data)
             bulk_data = []
     conn.execute_query(
-                "INSERT INTO tickers(tick, name) VALUES (?,?)",bulk_data)
+                "INSERT OR IGNORE  INTO tickers(tick, name) VALUES (?,?)",bulk_data)
     print('data inserted in tickers')
 
 def insert_metadata():
@@ -143,8 +143,9 @@ if __name__=="__main__":
     refresh_date = datetime.strptime(
         'Wed, 09 Nov 2022 17:49:42', 
         '%a, %d %b %Y %H:%M:%S').strftime('%d-%m-%Y %H:%M:%S')
+    
     # set_up()
     # insert_ticks()
-    # insert_metadata()
-    insert_investors_data(refresh_date)
+    insert_metadata()
+    # insert_investors_data(datetime.now())
     # datetime.strptime('Wed, 09 Nov 2022 17:49:42', '%a, %d %b %Y %H:%M:%S') 

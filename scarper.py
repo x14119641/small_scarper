@@ -10,7 +10,7 @@ class Scarper():
 
     def __init__(self, tickers=True) -> None:
         if tickers:
-            self.tickers = pd.read_csv('tickers.csv')
+            self.tickers = pd.read_csv('tickers2.csv')
 
 
     def get_data(self, tick):
