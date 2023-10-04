@@ -8,14 +8,9 @@ from db import ConnectorDb as cdb
 class Scarper():
     errors_dicts_list = []
 
-    def __init__(self, tickers=True, nasdaq=True) -> None:
-        if tickers and not nasdaq:
-            self.tickers = pd.read_csv('tickers.csv')
-        elif tickers and nasdaq:
-            print('HERE')
-            self.tickers = pd.read_csv('nasdaq_screener.csv')
-            print(self.tickers)
-            print(len(self.tickers))
+    def __init__(self, tickers=True) -> None:
+        if tickers:
+            self.tickers = pd.read_csv('tickers2.csv')
 
 
     def get_data(self, tick):
