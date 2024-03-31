@@ -75,10 +75,9 @@ def insert_investors_data(refresh_date=None):
     cls.tickers.fillna('', inplace=True)
     for tick in cls.tickers['Symbol']:
         i += 1
-        try:  
-            raw_data =   cls.get_data(tick)
-            data = cls.parse_data(raw_data)
-
+        print(i)
+        try:    
+            data = cls.parse_data(cls.get_data(tick))
             bulk_data.append((
                 tick, data['SharesOutstandingPCT'],
                 data['ShareoutstandingTotal'],data['TotalHoldingsValue'],
