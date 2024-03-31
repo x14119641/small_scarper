@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS tickers (tick text PRIMARY KEY, name text)

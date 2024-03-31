@@ -40,3 +40,10 @@ def test_delete_from_table(db):
     # Clean up
     db.execute("DROP TABLE create_test;")
     assert result is None, "The record should have been deleted."
+
+
+def test_create_schema(db):
+    """Test Create schema."""
+    db.create_schema()
+    result = db.fetchall("SELECT name FROM sqlite_master where type='table';")
+    assert set(['tickers', 'institutional_holdings', 'metadata']).issubset([d['name'] for d in result])

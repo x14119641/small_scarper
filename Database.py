@@ -1,10 +1,9 @@
 from contextlib import contextmanager
 from tools import get_logger
-import sqlite3
+import sqlite3, os
 
 DB = 'db.db'
 TEST_DB = 'test.db'
-
 
 class Database:
 
@@ -63,5 +62,16 @@ class Database:
         if rows:
             return [dict(row) for row in rows]
         return
+    
+    def read_sql(self, file_name):
+        with open(os.path.join('sql_queries',f'{file_name}.sql')) as f:
+            data = f.read()
+        return data
+
+    def create_schema(self):
+        self.execute(self.read_sql('create_tickers'))
+        self.execute(self.read_sql('create_institutional'))
+        self.execute(self.read_sql('create_metadata'))
+        self.logger.info('<Database> Schema Created!')
 
 
