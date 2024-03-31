@@ -5,6 +5,7 @@ class ConnectorDb():
 
     def __init__(self) -> None:
         self.conn = sqlite3.connect("db.db")
+        # self.create_schema()
 
 
     def create_schema(self):

@@ -50,7 +50,7 @@ def insert_metadata():
             row["Sector"],row["Industry"]
             ))
         if i % 999 ==0:
-            print(bulk_data)
+            # print(bulk_data)
             conn.execute_query(
                 """INSERT INTO metadata(
                     tick, name, last_sale, net_change, change_perc,
@@ -73,7 +73,7 @@ def insert_investors_data(refresh_date=None):
     bulk_data = []
     i=0
     cls.tickers.fillna('', inplace=True)
-    for tick in cls.tickers['Symbol'][0:-1]:
+    for tick in cls.tickers['Symbol']:
         i += 1
         try:  
             raw_data =   cls.get_data(tick)
@@ -90,8 +90,6 @@ def insert_investors_data(refresh_date=None):
                 data['SoldOutPositionsHolders'],data['SoldOutPositionsShares'],
                 refresh_date or ''
                 ))
-            if i % 100 ==0:
-                print(i)
             if i % 999 ==0:
                     conn.execute_query(
                         """INSERT INTO institutional_holdings (
@@ -146,6 +144,7 @@ if __name__=="__main__":
     
     # set_up()
     # insert_ticks()
+    insert_investors_data(datetime.now())
     insert_metadata()
     # insert_investors_data(datetime.now())
     # datetime.strptime('Wed, 09 Nov 2022 17:49:42', '%a, %d %b %Y %H:%M:%S') 

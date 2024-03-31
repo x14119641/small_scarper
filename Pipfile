@@ -4,8 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pandas = "*"
+selenium = "*"
+lxml = "*"
+requests = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.11"
